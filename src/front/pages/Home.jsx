@@ -1,9 +1,12 @@
 import React, { useEffect } from "react"
 import rigoImageUrl from "../assets/img/rigo-baby.jpg";
 import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
+import { useNavigate } from "react-router-dom";
 
 export const Home = () => {
 
+	let navigate = useNavigate()
+	
 	const { store, dispatch } = useGlobalReducer()
 
 	const loadMessage = async () => {
@@ -47,6 +50,14 @@ export const Home = () => {
 					</span>
 				)}
 			</div>
+			<button onClick={()=> navigate('/register')}>
+				Registrarse
+			</button>
+			<br />
+			<br />
+			<button onClick={()=> navigate('/login')}>
+				Loguearse
+			</button>
 		</div>
 	);
 }; 

@@ -8,8 +8,13 @@ from flask_swagger import swagger
 from api.utils import APIException, generate_sitemap
 from api.models import db
 from api.routes import api
+from api.admin_routes import adm
 from api.admin import setup_admin
 from api.commands import setup_commands
+
+# IMPORTACIONES NUEVAS:
+from flask_bcrypt import Bcrypt  # para encriptar y comparar
+from flask_jwt_extended import  JWTManager, create_access_token, jwt_required, get_jwt_identity
 
 # from models import Person
 
@@ -18,6 +23,14 @@ static_file_dir = os.path.join(os.path.dirname(
     os.path.realpath(__file__)), '../dist/')
 app = Flask(__name__)
 app.url_map.strict_slashes = False
+
+
+# Nuevas configuraciones :
+
+app.config["JWT_SECRET_KEY"] = "valor-variable"  # clave secreta para firmar los tokens, cuanto mas largo mejor.
+jwt = JWTManager(app)  # isntanciamos jwt de JWTManager utilizando app para tener las herramientas de encriptacion.
+bcrypt = Bcrypt(app)   # para encriptar password
+
 
 # database condiguration
 db_url = os.getenv("DATABASE_URL")
@@ -39,6 +52,7 @@ setup_commands(app)
 
 # Add all endpoints form the API with a "api" prefix
 app.register_blueprint(api, url_prefix='/api')
+app.register_blueprint(adm, url_prefix='/adm')
 
 # Handle/serialize errors like a JSON object
 
